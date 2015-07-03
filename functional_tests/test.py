@@ -57,7 +57,7 @@ class NewVisitorTest(unittest.TestCase):
                 any(row.text == 'default metadata here' for row in rows)
         )
 
-        inputbox = self.browser.find_element_by_id('id_dicom_metadata')
+        inputbox = self.browser.find_element_by_id('id_change_metadata')
         self.assertEqual(
                 inputbox.get_attribute('placeholder'),
                 'default metadata here'
