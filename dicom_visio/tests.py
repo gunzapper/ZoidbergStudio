@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 
 from dicom_visio.views import home_page
+from dicom_visio.models import MDatum
 
 class HomePageTest(TestCase):
 
@@ -32,3 +33,28 @@ class HomePageTest(TestCase):
             {'new_metadata_text': 'new metadata'}
         )
         self.assertEqual(response.content.decode(), expected_html)
+
+
+# Integrated tests
+
+# Note: think here how to update also
+# metadata in dicom files.
+# Note: In the database we have to store
+# also the path of the file (or more weird the image)
+class MDatumModelTest(TestCase):
+    # In a first moment metadata
+    # are a stand alone text
+    def test_saving_and_retrieving_metadata(self):
+        first_mdatum = MDatum()
+        first_mdatum.text = "The first (ever) dicom meta datum"
+        first_mdatum.save()
+
+        second_mdatum = MDatum()
+        second_mdatum.text = "Another meta datum"
+        second_mdatum.save()
+
+        saved_mdata = MDatum.objects.all()
+        self.assertEqual(saved_mdata.count(), 2)
+        self.assertEqual(saved_mdata[0].text,"The first (ever) dicom meta datum")
+        self.assertEqual(saved_mdata[1].text, "Another meta datum")
+
