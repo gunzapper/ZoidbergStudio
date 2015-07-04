@@ -13,6 +13,14 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_metadata_table(self, row_text):
+        table = self.browser.find_element_by_id('id_metadata_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+             any(row.text == row_text for row in rows),
+             "New metadata did not appear in table -- its text was:\n%s" %(table.text, )
+        )
+
     def test_first_access_to_site(self):
         # Prof Fansworth wants to access the Dr Zoidberg
         # sites, to see his medical data.
@@ -51,11 +59,7 @@ class NewVisitorTest(unittest.TestCase):
         # Fansworth looks a slide on the left
 
         # and the medical data on the right.
-        table = self.browser.find_element_by_id('id_metadata_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-                any(row.text == 'default metadata here' for row in rows)
-        )
+        self.check_for_row_in_metadata_table('default metadata here')
 
         inputbox = self.browser.find_element_by_id('id_change_metadata')
         self.assertEqual(
@@ -72,14 +76,7 @@ class NewVisitorTest(unittest.TestCase):
         ## And reload the metadata to the box
 
         # Fansworth look that the table is changed
-        table = self.browser.find_element_by_id('id_metadata_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-                any(row.text == 'Good news every one' for row in rows),
-                "New metadata did not appear in table -- its text was:\n%s" %(
-                    table.text,
-            )
-        )
+        self.check_for_row_in_metadata_table('Good news every one')
 
         # To be sure that the modifications had registered
         # Fansworth colose his browser, access again
