@@ -19,12 +19,17 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_can_save_a_POST_tequest(self):
+    def test_home_page_can_save_a_POST_request(self):
         request = HttpRequest()
         request.method = 'POST'
         request.POST['metadata_text'] = 'new metadata'
 
         response = home_page(request)
+
+        self.assertEqual(MDatum.objects.count(), 1)
+
+        new_mdatum = MDatum.objects.first()
+        self.assertEqual(new_mdatum.text, 'new metadata')
 
         self.assertIn('new metadata', response.content.decode())
 
@@ -33,7 +38,6 @@ class HomePageTest(TestCase):
             {'new_metadata_text': 'new metadata'}
         )
         self.assertEqual(response.content.decode(), expected_html)
-
 
 # Integrated tests
 
