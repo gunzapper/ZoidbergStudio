@@ -67,15 +67,18 @@ class NewVisitorTest(unittest.TestCase):
         # inserting data. Fansworth tryes to modifies data.
         inputbox.send_keys("Good news every one")
         inputbox.send_keys(Keys.ENTER)
-
         ## Probably it is better a button
         ## when pushed the sites updates the metadata
         ## And reload the metadata to the box
 
         # Fansworth look that the table is changed
+        table = self.browser.find_element_by_id('id_metadata_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
-                any(row.text == 'Good news every one' for row in rows)
+                any(row.text == 'Good news every one' for row in rows),
+                "New metadata did not appear in table -- its text was:\n%s" %(
+                    table.text,
+            )
         )
 
         # To be sure that the modifications had registered
