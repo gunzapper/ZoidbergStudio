@@ -31,14 +31,22 @@ class HomePageTest(TestCase):
         new_mdatum = MDatum.objects.first()
         self.assertEqual(new_mdatum.text, 'new metadata')
 
-        self.assertIn('new metadata', response.content.decode())
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['metadata_text'] = 'new metadata'
 
-        expected_html = render_to_string(
-            'home.html',
-            {'new_metadata_text': 'new metadata'}
-        )
-        self.assertEqual(response.content.decode(), expected_html)
+        response = home_page(request)
 
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'],'/')
+
+
+
+    def test_home_page_only_saves_metadata_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(MDatum.objects.count(), 0)
 # Integrated tests
 
 # Note: think here how to update also

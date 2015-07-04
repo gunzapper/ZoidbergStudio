@@ -1,13 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from dicom_visio.models import MDatum
 
 def home_page(request):
-    mdatum = MDatum()
-    mdatum.text = request.POST.get('metadata_text', '')
-    mdatum.save()
+    if request.method == 'POST':
+        MDatum.objects.create(text = request.POST['metadata_text'])
+        return redirect('/')
 
-    return render(request, 'home.html',{
-            'new_metadata_text': mdatum.text,  
-        })
+    return render(request, 'home.html')
