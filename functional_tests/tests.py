@@ -22,11 +22,11 @@ class NewVisitorTest(LiveServerTestCase):
         )
 
     def test_first_access_to_site(self):
-        # Prof Fansworth wants to access the Dr Zoidberg
+        # Prof Fanrsworth wants to access the Dr Zoidberg
         # sites, to see his medical data.
         # He goes to the site.
         self.browser.get(self.live_server_url)
-        # Fansworth notices that the title is
+        # Farnsworth notices that the title is
         # right
         self.assertIn("Zoidberg's Studios", self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
@@ -38,7 +38,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # He notice that it is impossible to access
         # without credetial. It's his first time
-        # (but Fansworth not ever has a good memories)
+        # (but Farnsworth not ever has a good memories)
         # He looks that, after the title box, there are two links
         # "Sing Up" and "Log In".
         # He chooses to push "Sign up"
@@ -49,14 +49,14 @@ class NewVisitorTest(LiveServerTestCase):
         # require only a Nickname and
         # a password.
 
-        # After registration Fansworth goes again to the
+        # After registration Farnsworth goes again to the
         # main page, and insert his credetials
 
         # Fry does not has credetial
         # and does access the site
         ##---------------------------------------------------------
 
-        # Fansworth looks a slide on the left
+        # Farnsworth looks a slide on the left
 
         # and the medical data on the right.
         self.check_for_row_in_metadata_table('default metadata here')
@@ -67,23 +67,47 @@ class NewVisitorTest(LiveServerTestCase):
                 'default metadata here'
         )
 
-        # Fansworth looks that Zoiberg makes an error
-        # inserting data. Fansworth tryes to modifies data.
+        # Farnsworth looks that Zoiberg makes an error
+        # inserting data. Farnsworth tryes to modifies data.
         inputbox.send_keys("Good news every one")
         inputbox.send_keys(Keys.ENTER)
+        farnsworth_url = self.browser.current_url
+        self.assertRegex(farnsworth_url, '/dicom_visio/.+')
         ## Probably it is better a button
         ## when pushed the sites updates the metadata
         ## And reload the metadata to the box
 
-        # Fansworth look that the table is changed
+        # Farnsworth look that the table is changed
         self.check_for_row_in_metadata_table('Good news every one')
 
+        # A new user, prof Wernstrom, come along the site.
+
+        ## We use a new browser session to make sure that no information
+        ## of Farnsworth's is coming thourgh form cokies etc...
+        self.browser.quit()
+        self.browser =  webdriver.Firefox()
+
+        # Wernstrom modifies his dicom metadata
+        inputbox = self.browser.find_element_by_id('id_change_metadata')
+        inputbox.send_keys('I am the best')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Wernstrom gets his own unique URL
+        wernstorm_url = self.browser.current_url
+        self.assertRegex(wernstorm_url, '/dicom_visio/.+')
+        self.assertNotEqual(wernstorm_url, farnsworth_url)
+
+        # Again, there is no trace of Farnsworth's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Good news every one', page_text)
+        self.assertIn('I am the best', page_text)
+
         # To be sure that the modifications had registered
-        # Fansworth colose his browser, access again
+        # Farnsworth colose his browser, access again
         # and look the data.
 
-        # All is fine, happy, Fansworth goes to take a nap
-        # on his fling cy, Fansworth goes to take a nap
+        # All is fine, happy, Farnsworth goes to take a nap
+        # on his fling cy, Farnsworth goes to take a nap
         # on his fling couch.
 
 if __name__ == '__main__':
