@@ -1,10 +1,10 @@
 # Good news everyone
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -25,7 +25,7 @@ class NewVisitorTest(unittest.TestCase):
         # Prof Fansworth wants to access the Dr Zoidberg
         # sites, to see his medical data.
         # He goes to the site.
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         # Fansworth notices that the title is
         # right
         self.assertIn("Zoidberg's Studios", self.browser.title)

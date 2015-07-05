@@ -58,3 +58,4 @@ target/
 
 # SQLite DB
 db.sqlite3
+dicom_Storage
