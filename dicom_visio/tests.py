@@ -23,6 +23,7 @@ class DicomViewTest(TestCase):
     # this part is going to be changed
     # I need not to create a new dicom
     # may be a new user
+
     def test_saving_a_POST_request(self):
         self.client.post(
                 '/dicom_visio/new',
@@ -39,24 +40,28 @@ class DicomViewTest(TestCase):
                '/dicom_visio/new',
                 data={'metadata_text': 'new metadata'}
         )
+        new_dicom = Dicom.objects.first()
+        self.assertRedirects(response, '/dicom_visio/%d/' % (new_dicom.id))
 
-        self.assertRedirects(response, '/dicom_visio/the-only-file-in-the-world/')
-
-
-    def test_uses_list_template(self):
-        response = self.client.get('/dicom_visio/the-only-file-in-the-world/')
-        self.assertTemplateUsed(response, 'dicom_file.html')
-
-    def test_displays_MData(self):
+    def test_uses_dicom_template(self):
         dicom = Dicom.objects.create()
-        MDatum.objects.create(text='meta datum 1', dicom=dicom)
-        MDatum.objects.create(text='meta datum 2', dicom=dicom)
+        response = self.client.get('/dicom_visio/%d/' %(dicom.id,))
+        self.assertTemplateUsed(response, 'dicom.html')
 
-        response = self.client.get('/dicom_visio/the-only-file-in-the-world/')
+    def test_displays_metadata_from_that_dicom(self):
+        correct_dicom = Dicom.objects.create()
+        MDatum.objects.create(text='meta datum 1', dicom=correct_dicom)
+        MDatum.objects.create(text='meta datum 2', dicom=correct_dicom)
+        other_dicom = Dicom.objects.create()
+        MDatum.objects.create(text='other dicom datum 1', dicom=other_dicom)
+        MDatum.objects.create(text='other dicom datum 2', dicom=other_dicom)
 
-        self.assertIn('meta datum 1', response.content.decode())
-        self.assertIn('meta datum 2', response.content.decode())
+        response = self.client.get('/dicom_visio/%d/' % (correct_dicom.id,))
 
+        self.assertContains(response, 'meta datum 1')
+        self.assertContains(response, 'meta datum 2')
+        self.assertNotContains(response, 'other dicom datum 1')
+        self.assertNotContains(response, 'other dicom datum 2')
 
 # Integrated tests
 
