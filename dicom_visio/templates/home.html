@@ -4,7 +4,7 @@
     </head>
     <body>
         <h1>Zoidberg's Studios</h1>
-        <form method="POST">
+        <form method="POST" action="/dicom_visio/new">
             <input name='metadata_text' id="id_change_metadata" placeholder="default metadata here"/>
             {% csrf_token %}
         </form>

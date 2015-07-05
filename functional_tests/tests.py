@@ -59,8 +59,8 @@ class NewVisitorTest(LiveServerTestCase):
         # Farnsworth looks a slide on the left
 
         # and the medical data on the right.
-        #self.check_for_row_in_metadata_table('default metadata here')
 
+        #self.check_for_row_in_metadata_table('default metadata here')
         ## Now the metadata are not in  the home page
         ## After this page will be used to login
         ## And after login the will be all dicom associated to the user
