@@ -39,22 +39,29 @@ class HomePageTest(TestCase):
         response = home_page(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'],'/')
+        self.assertEqual(response['location'],'/dicom_visio/the-only-file-in-the-world/')
 
     def test_home_page_only_saves_metadata_when_necessary(self):
         request = HttpRequest()
         home_page(request)
         self.assertEqual(MDatum.objects.count(), 0)
 
-    def test_home_page_displays_all_MData(self):
+class DicomViewTest(TestCase):
+
+    def test_uses_list_template(self):
+        response = self.client.get('/dicom_visio/the-only-file-in-the-world/')
+        self.assertTemplateUsed(response, 'dicom_file.html')
+
+    def test_displays_MData(self):
         MDatum.objects.create(text='meta datum 1')
         MDatum.objects.create(text='meta datum 2')
 
-        request = HttpRequest()
-        response = home_page(request)
+        response = self.client.get('/dicom_visio/the-only-file-in-the-world/')
 
         self.assertIn('meta datum 1', response.content.decode())
         self.assertIn('meta datum 2', response.content.decode())
+
+
 # Integrated tests
 
 # Note: think here how to update also

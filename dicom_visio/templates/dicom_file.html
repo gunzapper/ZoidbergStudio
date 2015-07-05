@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Zoidberg's Studios</title>
+    </head>
+    <body>
+        <h1>Zoidberg's Studios</h1>
+        <table id="id_metadata_table">
+            <tr>
+                <th>Metadata</th>
+            </tr>
+            <tr><td><i>default metadata here</i></td></tr>
+            <tr><td><i>Note: I'll design the model to have mdatum name and text</i></td></tr>
+            {% for mdatum  in mdata %}
+                <tr><td>{{ mdatum.text }}</td></tr>
+            {% endfor %}
+        </table>
+        <form method="POST" action="/">
+            <input name='metadata_text' id="id_change_metadata" placeholder="default metadata here"/>
+            {% csrf_token %}
+          </form>
+    </body>
+</html>

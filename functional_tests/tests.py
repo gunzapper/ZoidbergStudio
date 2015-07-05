@@ -59,7 +59,11 @@ class NewVisitorTest(LiveServerTestCase):
         # Farnsworth looks a slide on the left
 
         # and the medical data on the right.
-        self.check_for_row_in_metadata_table('default metadata here')
+        #self.check_for_row_in_metadata_table('default metadata here')
+
+        ## Now the metadata are not in  the home page
+        ## After this page will be used to login
+        ## And after login the will be all dicom associated to the user
 
         inputbox = self.browser.find_element_by_id('id_change_metadata')
         self.assertEqual(
@@ -86,6 +90,7 @@ class NewVisitorTest(LiveServerTestCase):
         ## of Farnsworth's is coming thourgh form cokies etc...
         self.browser.quit()
         self.browser =  webdriver.Firefox()
+        self.browser.get(self.live_server_url)
 
         # Wernstrom modifies his dicom metadata
         inputbox = self.browser.find_element_by_id('id_change_metadata')
