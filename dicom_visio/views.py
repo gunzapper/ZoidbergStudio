@@ -7,4 +7,5 @@ def home_page(request):
         MDatum.objects.create(text = request.POST['metadata_text'])
         return redirect('/')
 
-    return render(request, 'home.html')
+    mdata = MDatum.objects.all()
+    return render(request, 'home.html', {'mdata': mdata})

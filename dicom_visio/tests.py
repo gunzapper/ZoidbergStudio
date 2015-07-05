@@ -41,12 +41,20 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'],'/')
 
-
-
     def test_home_page_only_saves_metadata_when_necessary(self):
         request = HttpRequest()
         home_page(request)
         self.assertEqual(MDatum.objects.count(), 0)
+
+    def test_home_page_displays_all_MData(self):
+        MDatum.objects.create(text='meta datum 1')
+        MDatum.objects.create(text='meta datum 2')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('meta datum 1', response.content.decode())
+        self.assertIn('meta datum 2', response.content.decode())
 # Integrated tests
 
 # Note: think here how to update also
