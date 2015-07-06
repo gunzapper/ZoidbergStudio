@@ -10,13 +10,13 @@
             </tr>
             <tr><td><i>default metadata here</i></td></tr>
             <tr><td><i>Note: I'll design the model to have mdatum name and text</i></td></tr>
-            {% for mdatum  in mdata %}
+            {% for mdatum  in dicom.mdatum_set.all %}
                 <tr><td>{{ mdatum.text }}</td></tr>
             {% endfor %}
         </table>
-        <form method="POST" action="/dicom_visio/new">
+        <form method="POST" action="/dicom_visio/{{ dicom.id }}/add_item">
             <input name='metadata_text' id="id_change_metadata" placeholder="default metadata here"/>
             {% csrf_token %}
-          </form>
+        </form>
     </body>
 </html>

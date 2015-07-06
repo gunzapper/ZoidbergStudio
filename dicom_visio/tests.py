@@ -63,6 +63,39 @@ class DicomViewTest(TestCase):
         self.assertNotContains(response, 'other dicom datum 1')
         self.assertNotContains(response, 'other dicom datum 2')
 
+    def test_passes_correct_dicom_to_template(self):
+        other_dicom = Dicom.objects.create()
+        correct_dicom = Dicom.objects.create()
+        response = self.client.get('/dicom_visio/%d/' % (correct_dicom.id, ))
+        self.assertEqual(response.context['dicom'], correct_dicom)
+
+class NewMDatumTest(TestCase):
+
+    def test_can_save_a_POST_resquest_to_an_existing_dicom(self):
+        other_dicom = Dicom.objects.create()
+        correct_dicom = Dicom.objects.create()
+
+        self.client.post(
+            '/dicom_visio/%d/add_datum' % (correct_dicom.id, ),
+            data={'metadata_text': 'A new datum for an existing dicom'}
+        )
+
+        self.assertEqual(MDatum.objects.count(), 1)
+        new_datum = MDatum.objects.first()
+        self.assertEqual(new_datum.text,  'A new datum for an existing dicom')
+        self.assertEqual(new_datum.dicom, correct_dicom)
+
+    def test_redirects_to_dicom_view(self):
+        other_dicom = Dicom.objects.create()
+        correct_dicom = Dicom.objects.create()
+
+        response = self.client.post(
+            '/dicom_visio/%d/add_datum' % (correct_dicom.id, ),
+            data={'metadata_text': 'A new datum for an existing dicom'}
+        )
+
+        self.assertRedirects(response, '/dicom_visio/%d/' % (correct_dicom.id, ))
+
 # Integrated tests
 
 # Note: think here how to update also
