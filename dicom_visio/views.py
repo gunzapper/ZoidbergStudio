@@ -5,7 +5,7 @@ from dicom_visio.models import MDatum, Dicom
 def home_page(request):
     return render(request, 'home.html')
 
-def view_file(request, dicom_id):
+def view_dicom(request, dicom_id):
     dicom = Dicom.objects.get(id=dicom_id)
     return render(request, 'dicom.html', {'dicom':dicom})
 
