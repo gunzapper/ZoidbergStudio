@@ -18,8 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
      url(r'^$', 'dicom_visio.views.home_page', name='home'),
-     url(r'^dicom_visio/(\d+)/$', 'dicom_visio.views.view_dicom', name='view_dicom'),
-     url(r'^dicom_visio/(\d+)/add_datum$', 'dicom_visio.views.add_datum', name='add_datum'),
-     url(r'^dicom_visio/new$', 'dicom_visio.views.new_dicom', name='new_dicom')
-    #url(r'^admin/', include(admin.site.urls)),
+     url(r'^dicom_visio/', include('dicom_visio.urls'))
+    #url(r'^admin/', include(admin.site.urls))',
 ]
